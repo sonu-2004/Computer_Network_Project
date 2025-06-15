@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Signature-Based IDS</title>
+  <title>Real-Time Intrusion Detection System</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <header>
     <nav class="navbar">
-      <div class="logo">Computer Network Project</div>
+      <div class="logo">Computer Networks Project</div>
       <ul class="nav-links">
         <li><a href="#overview">Overview</a></li>
-        <li><a href="#demo">Demonstration</a></li>
         <li><a href="#config">Configuration</a></li>
+        <li><a href="#demo">Demonstration</a></li>
         <li><a href="#downloads">Downloads</a></li>
-        <li><a href="#assignments">Assignments</a></li>
       </ul>
       <div class="burger">
         <div class="line1"></div>
@@ -26,34 +27,107 @@
   </header>
 
   <section class="hero">
-    <h1>Signature-Based Intrusion Detection System</h1>
-    <p>Detecting network threats with real-time signature matching and intelligent alerts.</p>
+    <img src="https://www.paubox.com/hubfs/What%20is%20IDS.jpg" alt="IDS Concept Image" class="hero-image" />
+    <h1>Real-Time Intrusion Detection System</h1>
+    <p class="tagline">Detecting Suspicious Activities with Real-Time Alerts and Packet Inspection</p>
+    <a href="#overview" class="button">Get Started</a>
   </section>
 
-  <section id="overview" class="section">
+  <section id="overview" class="section fade-in">
     <h2>Overview</h2>
-    <p>This project implements a Signature-Based Intrusion Detection System using Python and packet analysis. It uses a database of attack signatures to detect malicious traffic in real-time.</p>
+    <h3>What is IDS?</h3>
+    <p>
+      An Intrusion Detection System (IDS) is a security solution designed to monitor and analyze network or system activities for signs of malicious actions or policy violations. Its primary function is to detect potential threats such as hacking attempts, port scans, malware activity, or unauthorized access within a network. IDS works by inspecting packets flowing through the network, identifying suspicious patterns based on predefined rules or anomaly detection techniques. Once an intrusion is detected, the system generates alerts to notify administrators, allowing them to take preventive or corrective action. IDS plays a crucial role in strengthening network security by providing early warning of potential attacks.
+    </p>
+
+    <h3>About the Project</h3>
+    <p>
+      This project focuses on implementing a network-based Intrusion Detection System (IDS) using a combination of Cisco Packet Tracer for network simulation and Python with Scapy for packet analysis. The simulated network consists of routers, switches, PCs, and a Syslog server, with one of the PCs designated as the target for monitoring potential attacks. The Python-based IDS script listens to the network traffic in real time and detects different types of scanning and flooding attacks such as SYN scan, NULL scan, FIN scan and XMAS scan. Whenever suspicious activity is detected based on traffic patterns and thresholds, the system generates alerts and stores them in a log file. This project demonstrates how custom-built IDS solutions can effectively monitor network security, providing valuable insights into intrusion detection mechanisms while helping users learn practical concepts of cybersecurity, packet analysis, and network management.
+    </p>
   </section>
 
-  <section id="demo" class="section">
-    <h2>Demonstration</h2>
-    <p>Check out the demo video below to see how the system works in action.</p>
-    <p><a href="#" class="button">Watch Demo</a></p>
-  </section>
-
-  <section id="config" class="section">
+  <section id="config" class="section fade-in">
     <h2>Configuration</h2>
-    <p>Instructions for setting up the environment, installing dependencies, and running the IDS tool.</p>
+
+    <h3>1. Build the Network Topology</h3>
     <ul>
-      <li>Install Python 3.x</li>
-      <li>Install Scapy and Wireshark</li>
-      <li>Run the script with admin privileges</li>
+      <li>3 × Routers (1941)</li>
+      <li>2 × Switches (2950-24)</li>
+      <li>2 × PCs</li>
+      <li>1 × Server (Syslog)</li>
     </ul>
+    <h3>Cables Required:</h3>
+    <ul>
+      <li>Serial cables for inter-router connections</li>
+      <li>Copper straight-through cables for PC and switch connections</li>
+    </ul>
+    <h3>Topology Layout:</h3>
+    <img src="simulation.png" alt="Network Topology Diagram" class="topology-image" />
+
+    <h3>2. Assign IP Addresses</h3>
+    <ul>
+      <li>PC-A: 192.168.1.10 / 255.255.255.0 / Gateway: 192.168.1.1</li>
+      <li>PC-C: 192.168.3.10 / 255.255.255.0 / Gateway: 192.168.3.1</li>
+      <li>Syslog Server: 192.168.1.100 / 255.255.255.0 / Gateway: 192.168.1.1</li>
+      <li>Router R1:
+        <ul>
+          <li>Gig0/1: 192.168.1.1 /24</li>
+          <li>Serial0/0/0: 10.1.1.1 /30</li>
+        </ul>
+      </li>
+      <li>Router R2:
+        <ul>
+          <li>Serial0/0/0: 10.1.1.2 /30</li>
+          <li>Serial0/0/1: 10.2.2.1 /30</li>
+        </ul>
+      </li>
+      <li>Router R3:
+        <ul>
+          <li>Serial0/0/1: 10.2.2.2 /30</li>
+          <li>Gig0/1: 192.168.3.1 /24</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>3. Configure Static Routes</h3>
+    <pre>R1 → ip route 192.168.3.0 255.255.255.0 10.1.1.2
+
+R2 →
+ip route 192.168.1.0 255.255.255.0 10.1.1.1
+ip route 192.168.3.0 255.255.255.0 10.2.2.2
+
+R3 → ip route 192.168.1.0 255.255.255.0 10.2.2.1</pre>
+
+    <h3>4. Enable Logging to Syslog Server</h3>
+    <pre>On R1, R2, and R3:
+conf t
+logging 192.168.1.100
+logging trap debugging
+service timestamps log datetime msec
+exit
+
+enable
+terminal monitor</pre>
   </section>
 
-  <section id="downloads" class="section">
+  <section id="demo" class="section fade-in">
+    <h2>Demonstration</h2>
+
+    <h3>IDS running..</h3>
+    <p>Real-time packet sniffing is initiated on the network interface. The IDS listens for incoming packets and monitors traffic continuously.</p>
+    <img src="idsrun.png" alt="idsrun" class="ids-image" />
+
+    <h3>Attacking the Target</h3>
+    <p>Different types of scans or attack simulations like SYN scan are initiated towards the target machine to test detection.</p>
+    <img src="attack.png" alt="idsrun" class="attack-image" />
+
+    <h3>Successful Detection</h3>
+    <p>The IDS identifies suspicious patterns in the network traffic and generates alerts. These alerts are logged for analysis and displayed in the console or a file.</p>
+    <img src="detect.png" alt="idsrun" class="detect-image" />
+  </section>
+
+  <section id="downloads" class="section fade-in">
     <h2>Downloads</h2>
-    <p>You can download the project code, PDF report, and presentation slides below:</p>
     <ul>
       <li><a href="#" download>Source Code (.zip)</a></li>
       <li><a href="#" download>Project Report (.pdf)</a></li>
@@ -61,20 +135,11 @@
     </ul>
   </section>
 
-  <section id="assignments" class="section">
-    <h2>Assignments</h2>
-    <p>Relevant lab exercises and assignments related to this project:</p>
-    <ul>
-      <li>Packet Capture and Analysis</li>
-      <li>Writing Custom Signatures</li>
-      <li>Simulating Attacks</li>
-    </ul>
-  </section>
-
   <footer>
-    <p>© 2025 Computer Network Project. All rights reserved.</p>
+    <p>© 2025 Computer Networks Project</p>
   </footer>
 
   <script src="script.js"></script>
 </body>
+
 </html>
